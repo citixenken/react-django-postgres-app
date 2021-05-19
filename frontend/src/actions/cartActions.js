@@ -19,3 +19,13 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
   //data persists even after browser refresh
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };
+
+export const removeFromCart = (id) => (dispatch, getState) => {
+  dispatch({
+    type: CART_REMOVE_ITEM,
+    payload: id,
+  });
+
+  //updates local storage
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
