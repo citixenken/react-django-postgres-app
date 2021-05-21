@@ -16,18 +16,22 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # Add custom claims
-        token['username'] = user.username
-        token['message'] = 'hello there'
-        # ...
+        # # Add custom claims
+        # token['username'] = user.username
+        # token['message'] = 'hello there'
+        # # ...
 
         return token
     
     def validate(self, attrs):
         data = super().validate(attrs)
 
-        data['username'] = self.user.username
-        data['email'] = self.user.email
+        # data['username'] = self.user.username
+        # data['email'] = self.user.email
+
+        serializer = UserSerializerWithToken(self.user).data
+        for k,v in serializer.items():
+            data[k] = v
         
         return data
 
@@ -39,6 +43,14 @@ class MyTokenObtainPairView(TokenObtainPairView):
 def getRoutes(request):
     routes=[]
     return Response(routes)
+
+@api_view(['GET'])
+def getUserProfile(request):
+
+    #return response from db
+    user = request.user
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data) 
 
 @api_view(['GET'])
 def getProducts(request):
