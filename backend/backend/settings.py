@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
     
     'base.apps.BaseConfig',
+    
 
 ]
 
