@@ -38,20 +38,6 @@ const PlaceOrderScreen = () => {
     const placeOrder = () => {
         console.log("Place Order");
     };
-    // const { shippingAddress } = cart;
-
-    // const dispatch = useDispatch();
-
-    // const [address, setAddress] = useState(shippingAddress.address);
-    // const [city, setCity] = useState(shippingAddress.city);
-    // const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
-    // const [country, setCountry] = useState(shippingAddress.country);
-
-    // const submitHandler = (e) => {
-    //     e.preventDefault();
-    //     dispatch(saveShippingAddress({ address, city, postalCode, country }));
-    //     history.push("/payment");
-    // };
 
     return (
         <div>
