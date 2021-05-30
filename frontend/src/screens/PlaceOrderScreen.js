@@ -17,9 +17,17 @@ import FormContainer from "../components/FormContainer";
 import Checkoutsteps from "../components/CheckoutSteps";
 
 import { useDispatch, useSelector } from "react-redux";
-import {} from "../actions/cartActions";
+import { createOrder } from "../actions/orderActions";
+import { ORDER_CREATE_RESET } from "../constants/orderConstants";
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({ history }) => {
+    const orderCreate = useSelector((state) => state.orderCreate);
+
+    //destructuring orderCreate
+    const { order, error, success } = orderCreate;
+
+    const dispatch = useDispatch();
+
     const cart = useSelector((state) => state.cart);
 
     //calculations below are dynamic for this page ONLY!
@@ -35,8 +43,29 @@ const PlaceOrderScreen = () => {
         Number(cart.taxPrice)
     ).toFixed(2);
 
+    if (!cart.paymentMethod) {
+        history.push("/payment");
+    }
+
+    useEffect(() => {
+        if (success) {
+            history.push(`/order/${order._id}`);
+            dispatch({ type: ORDER_CREATE_RESET });
+        }
+    }, [success, history]);
+
     const placeOrder = () => {
-        console.log("Place Order");
+        dispatch(
+            createOrder({
+                orderItems: cart.cartItems,
+                shippingAddress: cart.shippingAddress,
+                paymentMethod: cart.paymentMethod,
+                itemsPrice: cart.itemsPrice,
+                shippingPrice: cart.shippingPrice,
+                taxPrice: cart.taxPrice,
+                totalPrice: cart.taxPrice,
+            })
+        );
     };
 
     return (
@@ -141,6 +170,12 @@ const PlaceOrderScreen = () => {
                                     <Col>TOTAL: </Col>
                                     <Col>${cart.totalPrice}</Col>
                                 </Row>
+                            </ListGroup.Item>
+
+                            <ListGroup.Item>
+                                {error && (
+                                    <Message variant="danger">{error}</Message>
+                                )}
                             </ListGroup.Item>
 
                             <ListGroup.Item>
