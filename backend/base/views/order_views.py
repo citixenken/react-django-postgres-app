@@ -9,6 +9,8 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from rest_framework.serializers import Serializer
 
+from datetime import datetime
+
 from base.models import Product, Order, OrderItem, ShippingAddress
 from base.serializers import ProductSerializer, OrderSerializer
 
@@ -54,7 +56,8 @@ def addOrderItems(request):
                 name = product.name,
                 qty = i['qty'],
                 price = i['price'],
-                image = product.image.url,
+                #image = product.image.url,
+                image = product.image,
             )
             # 4. Update Product countInStock
             product.countInStock -= item.qty
@@ -84,3 +87,13 @@ def getOrderById(request, pk):
         return Response({'detail': 'Order does not exist'}, 
             status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateOrderToPaid(request, pk):
+    order = Order.objects.get(_id=pk)
+
+    order.isPaid = True
+    order.paidAt = datetime.now()
+    order.save()
+
+    return Response('Order was Paid.')
