@@ -19,6 +19,7 @@ import {
 import {
     orderCreateReducer,
     orderDetailsReducer,
+    orderPayReducer,
 } from "./reducers/orderReducers";
 
 const reducer = combineReducers({
@@ -31,6 +32,7 @@ const reducer = combineReducers({
     userUpdateProfile: userUpdateProfileReducer,
     orderCreate: orderCreateReducer,
     orderDetails: orderDetailsReducer,
+    orderPay: orderPayReducer,
 });
 
 //loading local storage data into our state
