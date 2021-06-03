@@ -42,7 +42,9 @@ const OrderScreen = ({ match }) => {
             .reduce((acc, item) => acc + item.price * item.qty, 0)
             .toFixed(2);
 
-        order.shippingPrice = (order.itemsPrice > 1000 ? 0 : 10).toFixed(2);
+        order.shippingPrice = Number(order.itemsPrice > 1000 ? 0 : 10).toFixed(
+            2
+        );
         order.taxPrice = Number(0.16 * order.itemsPrice).toFixed(2);
         order.totalPrice = (
             Number(order.itemsPrice) +
