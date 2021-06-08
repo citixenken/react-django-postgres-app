@@ -7,6 +7,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import {
     productListReducer,
     productDetailsReducer,
+    productDeleteReducer,
 } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducers";
 import {
@@ -41,6 +42,7 @@ const reducer = combineReducers({
     orderDetails: orderDetailsReducer,
     orderPay: orderPayReducer,
     orderMyList: orderMyListReducer,
+    productDelete: productDeleteReducer,
 });
 
 //loading local storage data into our state

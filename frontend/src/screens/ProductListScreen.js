@@ -17,17 +17,22 @@ import Message from "../components/Message";
 import FormContainer from "../components/FormContainer";
 
 import { useDispatch, useSelector } from "react-redux";
-import { listProducts } from "../actions/productActions";
+import { listProducts, deleteProduct } from "../actions/productActions";
 
 const ProductListScreen = ({ history, match }) => {
     const dispatch = useDispatch();
 
     const productList = useSelector((state) => state.productList);
-
     const { loading, error, products } = productList;
 
-    const userLogin = useSelector((state) => state.userLogin);
+    const productDelete = useSelector((state) => state.productDelete);
+    const {
+        loading: loadingDelete,
+        error: errorDelete,
+        success: successDelete,
+    } = productDelete;
 
+    const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
 
     useEffect(() => {
@@ -37,12 +42,12 @@ const ProductListScreen = ({ history, match }) => {
         } else {
             history.push("/login");
         }
-    }, [dispatch, history, userInfo]);
+    }, [dispatch, history, userInfo, successDelete]);
 
     const deleteHandler = (id) => {
         //confirm before deletion
         if (window.confirm("Are you sure you want to delete this product?")) {
-            //delete products
+            dispatch(deleteProduct(id));
         }
     };
 
@@ -60,6 +65,10 @@ const ProductListScreen = ({ history, match }) => {
                     </Button>
                 </Col>
             </Row>
+
+            {loadingDelete && <Loader />}
+            {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+
             {loading ? (
                 <Loader />
             ) : error ? (
@@ -81,7 +90,7 @@ const ProductListScreen = ({ history, match }) => {
                             <tr key={product._id}>
                                 <td>{product._id}</td>
                                 <td>{product.name}</td>
-                                <td>{product.price}</td>
+                                <td>${product.price}</td>
                                 <td>{product.category}</td>
                                 <td>{product.brand}</td>
 
