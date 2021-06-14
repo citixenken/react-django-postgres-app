@@ -10,6 +10,7 @@ import {
     productCreateReducer,
     productUpdateReducer,
     productDeleteReducer,
+    productReviewCreateReducer,
 } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducers";
 import {
@@ -51,6 +52,7 @@ const reducer = combineReducers({
     productCreate: productCreateReducer,
     productUpdate: productUpdateReducer,
     productDelete: productDeleteReducer,
+    productReviewCreate: productReviewCreateReducer,
 });
 
 //loading local storage data into our state
