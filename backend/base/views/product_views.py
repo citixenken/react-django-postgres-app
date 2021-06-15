@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -15,16 +16,36 @@ from base.serializers import ProductSerializer
 
 @api_view(['GET'])
 def getProducts(request):
-    query= request.query_params.get('keyword')
-    print('query:', query)
-
+    query = request.query_params.get('keyword')
+    
     if query == None:
         query = ''
 
     #return response from db
     products = Product.objects.filter(name__icontains=query)
+
+    page = request.query_params.get('page')
+    
+    #number of query sets per page
+    paginator = Paginator(products, 4)
+
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        #show last page
+        products = paginator.page(paginator.num_pages)
+
+    if page == None:
+        page = 1
+
+    page = int(page)
+
     serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data)    
+    return Response({'products': serializer.data, 
+                    'page': page, 
+                    'pages': paginator.num_pages})    
 
 @api_view(['GET'])
 def getProduct(request, pk):
